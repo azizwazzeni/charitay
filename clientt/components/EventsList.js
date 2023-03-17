@@ -22,7 +22,7 @@ const EventsList = (props) => {
   console.log(props.data.length);
   return (
     <HStack flexWrap={1}>
-      {props.data.filter((e,i)=> i<1).map((item, index) => (
+      {props.data.filter((e,i)=> i<4).map((item, index) => (
         <TouchableOpacity onPress={() =>
           navigation.navigate("EventDetails", {
             idd: item.id,
@@ -35,7 +35,7 @@ const EventsList = (props) => {
               </View>
               <View style={styles.footer}>
                 <View style={styles.titleBox}>
-                  {/* <Text style={styles.title}>{item.title}</Text> */}
+                  <Text style={styles.title}>{item.title.slice(0,19)}...</Text>
                   {/* <Text style={styles.description}>{item.description}</Text> */}
                 </View>
               </View>

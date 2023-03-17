@@ -28,6 +28,8 @@ import {
   AlertDialog,
   Icon,
   Flex,
+  useDisclose,
+  Actionsheet,
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Events from "./Events";
@@ -35,6 +37,7 @@ import { Entypo } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 
 const Profile = () => {
+  const { isOpen, onOpen, onClose } = useDisclose();
   const [user, setuser] = useState({});
   const [id, setid] = useState("");
 
@@ -95,106 +98,73 @@ const Profile = () => {
     signOut(authentication)
       .then(() => {
         deletefromLocalStorage();
+      }).then(()=>{
+        navigation.navigate("Signin")
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const cancelRef = useRef(null);
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View>
-          <Box alignItems="center" top="0">
+          <HStack
+            w="100%"
+            maxW="450"
+            borderWidth="1"
+            space={1}
+            rounded="md"
+            borderColor="coolGray.400"
+          >
             <Box maxW="100%" maxH="690">
-              <Box>
-                <AspectRatio w="100%" ratio={20 / 15}>
-                  <Image
-                    resizeMode="contain"
-                    source={{ uri: user.image }}
-                    alt="image"
+              <AspectRatio w="100%" ratio={20 / 15}>
+                <Image
+                  resizeMode="contain"
+                  source={{ uri: user.image }}
+                  alt="image"
+                />
+              </AspectRatio>
+            </Box>
+          </HStack>
+
+          <HStack
+            w="100%"
+            maxW="450"
+            space={1}
+            rounded="md"
+            borderColor="coolGray.400"
+          >
+            <Stack p="3" space={7}>
+              <Stack space={3}>
+                <Heading>{user.name}</Heading>
+                <Heading style={{ color: "#525252", fontSize: 20 }}>
+                  <MaterialCommunityIcons
+                    name="email-receive-outline"
+                    size={24}
+                    color="#525252"
                   />
-                </AspectRatio>
-              </Box>
-              <Stack p="3" space={5}>
-                <Stack space={3}>
-                  <Heading>{user.name}</Heading>
-                  <View>
-                    <Heading style={{ color: "#525252", fontSize: 20 }}>
-                      <MaterialCommunityIcons
-                        name="email-receive-outline"
-                        size={24}
-                        color="#525252"
-                      />
-                      {user.email}
-                    </Heading>
-                  </View>
-                </Stack>
+                  {user.email}
+                </Heading>
                 <Text style={{ fontSize: 16 }}>{user.description}</Text>
               </Stack>
-
-              <Center>
-                <AlertDialog
-                  leastDestructiveRef={cancelRef}
-                  isOpen={isOpen}
-                  onClose={onClose}
-                >
-                  <AlertDialog.Content>
-                    <AlertDialog.CloseButton />
-                    <AlertDialog.Header>Delete Account</AlertDialog.Header>
-                    <AlertDialog.Body>
-                      This will remove account relating to You. This action
-                      cannot be reversed. Deleted data can not be recovered.
-                    </AlertDialog.Body>
-                    <AlertDialog.Footer>
-                      <Button.Group space={2}>
-                        <Button
-                          variant="unstyled"
-                          colorScheme="coolGray"
-                          onPress={onClose}
-                          ref={cancelRef}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          colorScheme="danger"
-                          onPress={() => {
-                            handeldelete();
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </Button.Group>
-                    </AlertDialog.Footer>
-                  </AlertDialog.Content>
-                </AlertDialog>
-              </Center>
-              <View style={{ gap: 10 }}>
-                <Button onPress={() => navigation.navigate("demo")}>
-                  Events
-                </Button>
-                <Button onPress={() => navigation.navigate("EditProfileView")}>
-                  Edit Profile
-                </Button>
-                <Button onPress={() => setIsOpen(!isOpen)}>
-                  Delete Account
-                </Button>
-                <Button
-                  colorScheme="danger"
-                  onPress={() => {
-                    logout(), navigation.navigate("Signin");
-                  }}
-                >
-                  logout
-                </Button>
-              </View>
-            </Box>
-          </Box>
+            </Stack>
+          </HStack>
+          <Button borderRadius={6} onPress={onOpen}>
+            Details
+          </Button>
+          <Actionsheet isOpen={isOpen} onClose={onClose} size="full">
+            <Actionsheet.Content>
+              <Actionsheet.Item onPress={()=>navigation.navigate("Event")}>Events</Actionsheet.Item>
+              <Actionsheet.Item onPress={()=>navigation.navigate("AddEvent")}>Create an Events</Actionsheet.Item>
+              <Actionsheet.Item onPress={()=>navigation.navigate("EditProfileView")}>Edit Profile</Actionsheet.Item>
+              <Actionsheet.Item onPress={()=>handeldelete}>Delete Account</Actionsheet.Item>
+              <Actionsheet.Item onPress={()=>{logout()}}>logOut</Actionsheet.Item>
+            </Actionsheet.Content>
+          </Actionsheet>
         </View>
       </ScrollView>
     </SafeAreaView>

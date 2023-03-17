@@ -1,4 +1,4 @@
-import { Button, HStack, VStack, Input } from "native-base";
+import { Button, HStack, VStack, Input,Center,IconButton,AntDesign } from "native-base";
 import React, { useEffect, useState } from "react";
 import {
   Image,
@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { event, associations } from "../../clientt/Axios";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { EvilIcons } from '@expo/vector-icons'; 
 
 const CARD_WIDTH = 175;
 const CARD_HEIGTH = 220;
@@ -49,6 +50,7 @@ const handleChange = text => {
   return (
     <ScrollView>
       <VStack w="100%" space={7} alignSelf="center">
+    
         <Input
         onChangeText={handleChange}
           placeholder="Search People & Places"
@@ -62,8 +64,9 @@ const handleChange = text => {
          
         
         />
+        
+  <EvilIcons name="search" size={30}  color="black" style={{top:-110,left:340}} />
       </VStack>
-{/* {console.log(search)} */}
       <HStack flexWrap={1}>
         {searchedData.map((item, index) => (
           <ScrollView>
@@ -84,7 +87,7 @@ const handleChange = text => {
                 </View>
                 <View style={styles.footer}>
                   <View style={styles.titleBox}>
-                    {/* <Text style={styles.title}>{item.title}</Text> */}
+                    <Text style={styles.title}>{item.title.slice(0,19)}...</Text>
                     {/* <Text style={styles.description}>{item.description}</Text> */}
                   </View>
                 </View>

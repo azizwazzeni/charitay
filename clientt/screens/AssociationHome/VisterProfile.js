@@ -27,13 +27,16 @@ import {
   AlertDialog,
   Icon,
   Flex,
+  useDisclose,
+  Actionsheet,
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const VisterProfile = ({ route }) => {
   const [id, setid] = useState("");
-  const idd = route.params;
+  const idd = route.params.idd;
   const [data, setdata] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclose();
 
   useEffect(() => {
     axios
@@ -50,35 +53,48 @@ const VisterProfile = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View>
-          <Box alignItems="center" top="0">
+          <HStack
+            w="100%"
+            maxW="450"
+            borderWidth="1"
+            space={1}
+            rounded="md"
+            borderColor="coolGray.400"
+          >
             <Box maxW="100%" maxH="690">
-              <Box>
-                <AspectRatio w="100%" ratio={20 / 15}>
-                  <Image
-                    resizeMode="contain"
-                    source={{ uri: data.image }}
-                    alt="image"
+              <AspectRatio w="100%" ratio={20 / 15}>
+                <Image
+                  resizeMode="contain"
+                  source={{ uri: data.image }}
+                  alt="image"
+                />
+              </AspectRatio>
+            </Box>
+          </HStack>
+
+          <HStack
+            w="100%"
+            maxW="450"
+            space={1}
+            rounded="md"
+            borderColor="coolGray.400"
+          >
+            <Stack p="3" space={7}>
+              <Stack space={3}>
+                <Heading>{data.name}</Heading>
+                <Heading style={{ color: "#525252", fontSize: 20 }}>
+                  <MaterialCommunityIcons
+                    name="email-receive-outline"
+                    size={24}
+                    color="#525252"
                   />
-                </AspectRatio>
-              </Box>
-              <Stack p="3" space={5}>
-                <Stack space={3}>
-                  <Heading>{data.name}</Heading>
-                  <View>
-                    <Heading style={{ color: "#525252", fontSize: 20 }}>
-                      <MaterialCommunityIcons
-                        name="email-receive-outline"
-                        size={24}
-                        color="#525252"
-                      />
-                      {data.email}
-                    </Heading>
-                  </View>
-                </Stack>
+                  {data.email}
+                </Heading>
                 <Text style={{ fontSize: 16 }}>{data.description}</Text>
               </Stack>
-            </Box>
-          </Box>
+            </Stack>
+          </HStack>
+         
         </View>
       </ScrollView>
     </SafeAreaView>
